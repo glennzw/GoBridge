@@ -103,7 +103,7 @@ class SMTPServer(smtpd.SMTPServer):
 if __name__ == "__main__":    
     credentials = ServiceAccountCredentials.from_json_keyfile_name(CLIENT_SECRET_FILE, scopes)
     http = credentials.authorize(httplib2.Http())
-    smtp_server = SMTPServer((SMTP_INTERFACE, 2500), None)
+    smtp_server = SMTPServer((SMTP_INTERFACE, SMTP_PORT), None)
     try:
         asyncore.loop()
     except KeyboardInterrupt:
