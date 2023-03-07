@@ -1,9 +1,8 @@
 # GoBridge
 
-GoBridge is an SMTP to GMail API service. It will allow you to host an SMTP server that will accept emails and directly INSERT them into users' inboxes, bypassing any filtering. This is achieved by using the Google Workspace API; and specifically the `users.messages.insert` endpoint.
+GoBridge is an SMTP to GMail API service. It will allow you to host an SMTP server that will accept emails and directly INSERT them into users' inboxes, bypassing any filtering. This is achieved by using the GMail API; and specifically the `users.messages.insert` endpoint.
 
-You will need to authorize your service account client via the Google Workspace admin console, and save the `service_secret.json` file to the working directory. This will give permission to impersonate any user and insert the email into their inbox. Authorizing a service account to access data on behalf of users in a domain is sometimes referred to as "delegating domain-wide authority"
-to a service account.
+You will need to create and authorize a service account, save the `service_secret.json` file to the working directory, and delegate domain-wide authority for the service account. This will give permission to impersonate any user and insert the email into their inbox. For a step by step list of instructions please see [GMailSetup.md](GMailSetupDocumentation/GMailSetup.md)
 
 
 ## Package Installation
