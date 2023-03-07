@@ -78,7 +78,7 @@ class SMTPServer(smtpd.SMTPServer):
         # NB If any of the addresses in rcpttos fail the function will return
         for rcptto in rcpttos:
             try:
-                message = {'labelIds': ["INBOX", "UNREAD", "IMPORTANT", "STARRED"], 'raw': base64.b64encode(data).decode('utf-8')}
+                message = {'labelIds': LABELS, 'raw': base64.b64encode(data).decode('utf-8')}
                 delegated_credentials = credentials.create_delegated(rcptto)
                 http_auth = delegated_credentials.authorize(httplib2.Http())
                 service = discovery.build('gmail', 'v1', http=http_auth)
