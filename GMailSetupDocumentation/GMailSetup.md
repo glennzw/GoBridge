@@ -58,7 +58,7 @@ Go to your Google Workspace domain's Admin Console via: https://admin.google.com
 
 4. In the Client ID field, enter the service account's Client ID (copied above in step 3.4).
 
-5. In the OAuth scopes (comma-delimited) field, enter https://mail.google.com/
+5. In the OAuth scopes (comma-delimited) field, enter https://www.googleapis.com/auth/gmail.insert
 
 6. Click Authorize
 

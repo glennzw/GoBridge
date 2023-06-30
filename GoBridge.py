@@ -49,7 +49,7 @@ SMTP_PORT = config.getint('GOBRIDGE', 'SMTPPort')
 SMTP_INTERFACE = config.get('GOBRIDGE', 'SMTPInterface')
 LABELS = config.get('GOBRIDGE', 'Labels').split(',')
 
-scopes = ['https://mail.google.com/']
+scopes = ["https://www.googleapis.com/auth/gmail.insert"]
 
 splash = """
    _____       ____       _     _            
