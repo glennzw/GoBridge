@@ -1,8 +1,13 @@
-FROM python:3.9
+FROM python:3.11-slim
+
+RUN adduser gobridge
+WORKDIR /home/gobridge
+USER gobridge
+
 ADD requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip install  --user -r requirements.txt
 ADD GoBridge.py .
 ADD config.ini .
-ADD service_secret.json .
+
 EXPOSE 2500
 CMD [ "python", "./GoBridge.py" ]
