@@ -34,6 +34,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 import oauth2client 
 from googleapiclient.errors import HttpError
 import json
+import os
+
 # Libraries for SMTP server
 import smtpd
 import asyncore
@@ -46,10 +48,10 @@ config.read('config.ini')
 
 CLIENT_SECRET_FILE = config.get('GOBRIDGE', 'ClientSecretFile')
 SMTP_PORT = config.getint('GOBRIDGE', 'SMTPPort')
-SMTP_INTERFACE = config.get('GOBRIDGE', 'SMTPInterface')
-LABELS = config.get('GOBRIDGE', 'Labels').split(',')
+SMTP_INTERFACE = os.getenv('SMTP_INTERFACE', config.get('GOBRIDGE', 'SMTPInterface'))
+LABELS = os.getenv('SMTP_LABELS', config.get('GOBRIDGE', 'Labels')).split(',')
 
-scopes = ['https://mail.google.com/']
+scopes = ["https://www.googleapis.com/auth/gmail.insert"]
 
 splash = """
    _____       ____       _     _            
@@ -100,8 +102,25 @@ class SMTPServer(smtpd.SMTPServer):
                 #raise error
                 return '554 Unahndled error'
 
-if __name__ == "__main__":    
-    credentials = ServiceAccountCredentials.from_json_keyfile_name(CLIENT_SECRET_FILE, scopes)
+def create_secret_keyfile():
+    return json.loads(base64.b64decode(os.environ["GOOGLE_SECRET_BASE64_ENCODED"]))
+
+
+def get_credential():
+    if os.path.exists(CLIENT_SECRET_FILE):
+        print("[+] Running GoBridge with google secret from file")
+        return ServiceAccountCredentials.from_json_keyfile_name(
+            CLIENT_SECRET_FILE, scopes
+        )
+    else:
+        print("[+] Running GoBridge with google secret from env variable")
+        return ServiceAccountCredentials.from_json_keyfile_dict(
+            create_secret_keyfile(), scopes
+        )
+
+
+if __name__ == "__main__":
+    credentials = get_credential()
     http = credentials.authorize(httplib2.Http())
     smtp_server = SMTPServer((SMTP_INTERFACE, SMTP_PORT), None)
     try:

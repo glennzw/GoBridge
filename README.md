@@ -48,8 +48,20 @@ $ python3 GoBridge.py
 [!] An error occurred inserting mail for nosuchuser@widgets.com: invalid_grant: Invalid email or User ID
 [!] An error occurred inserting mail for glenn@baddomain.com: invalid_grant: Invalid email or User ID
 ```
-
 As can be seen in the above output email addresses not in the scope of the service account will be rejected.
+
+
+## Docker build
+
+In order to build docker image, need to run `docker build -t GoBridge .`
+
+## Docker running
+
+To run GoBridge into docker image, need to set up few variables specify into .env.example
+- First need to copy .env.exampke into .env file `cp .env.example .env`
+- Run `cat service_secret.json|base64` and copy value and set value of GOOGLE_SECRET_BASE64_ENCODED with output value
+
+Now you can run `docker run  -p 2500:2500  -t --env-file=.env  GoBridge`
 
 ### References:
 https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert
