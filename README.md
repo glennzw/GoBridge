@@ -5,21 +5,16 @@ GoBridge is an SMTP to GMail API service. It will allow you to host an SMTP serv
 You will need to create and authorize a service account, save the `service_secret.json` file to the working directory, and delegate domain-wide authority for the service account. This will give permission to impersonate any user and insert the email into their inbox. For a step by step list of instructions please see [GMailSetup.md](GMailSetupDocumentation/GMailSetup.md)
 
 ## This stack
-
 This stack changes some ways the core GoBridge applicaiton works in order to work within a docker compose stack.
 
-## Package Installation
-Run `pip3 install -r requirements.txt` to install the appropriate packages.
-
 ## Configuration
-Appropriate settings are defined in the `docker-compose.yml` file as environment variables. The default values are:
+Appropriate settings can be defined in the `config.json` file. The default values are and work securely as the service is behind a traefik reverse proxy:
 
 ```
-[GOBRIDGE]
-ClientSecretFile = service_secret.json
-SMTPPort = 2500
-SMTPInterface = localhost
-Labels = INBOX,UNREAD,IMPORTANT,STARRED
+     - SMTP_INTERFACE=0.0.0.0
+     - SMTP_PORT=2500
+     - LABELS=INBOX,UNREAD,IMPORTANT,STARRED
+     - GOOGLE_SECRET=/service_secret
 ```
 
 The `Labels` section refer to GMail labels - the default values ensure the email will be as visible as possible to the user.
