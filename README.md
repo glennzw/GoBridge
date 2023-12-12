@@ -4,12 +4,15 @@ GoBridge is an SMTP to GMail API service. It will allow you to host an SMTP serv
 
 You will need to create and authorize a service account, save the `service_secret.json` file to the working directory, and delegate domain-wide authority for the service account. This will give permission to impersonate any user and insert the email into their inbox. For a step by step list of instructions please see [GMailSetup.md](GMailSetupDocumentation/GMailSetup.md)
 
+## This stack
+
+This stack changes some ways the core GoBridge applicaiton works in order to work within a docker compose stack.
 
 ## Package Installation
 Run `pip3 install -r requirements.txt` to install the appropriate packages.
 
 ## Configuration
-Appropriate settings can be defined in the `config.json` file. The default values are:
+Appropriate settings are defined in the `docker-compose.yml` file as environment variables. The default values are:
 
 ```
 [GOBRIDGE]
@@ -24,7 +27,7 @@ The `Labels` section refer to GMail labels - the default values ensure the email
 Make sure the `service_secret.json` file has been [generated](https://developers.google.com/identity/protocols/oauth2/service-account#creatinganaccount) and downloaded. 
 
 ## Running
-Simply run the Python file, for example:
+The GoBridge service will run when the docker compose file is fired up. You can view any logs by running `docker logs gobridge`
 
 ```
 $ python3 GoBridge.py
@@ -48,20 +51,17 @@ $ python3 GoBridge.py
 [!] An error occurred inserting mail for nosuchuser@widgets.com: invalid_grant: Invalid email or User ID
 [!] An error occurred inserting mail for glenn@baddomain.com: invalid_grant: Invalid email or User ID
 ```
-As can be seen in the above output email addresses not in the scope of the service account will be rejected.
+As can be seen in the above output, email addresses not in the scope of the service account will be rejected.
 
 
-## Docker build
+## Modifications
 
-In order to build docker image, need to run `docker build -t GoBridge .`
+Download this whole repository and amend the .env file to align with your own environment. You should not need to amend much else, however may wish to look at the following line and amend with any other domains you will use for portals:
+`      - "traefik.http.routers.gophish-router.rule=Host(`gophish.$DOMAIN`) || Host(`host2.com`)`
 
 ## Docker running
 
-To run GoBridge into docker image, need to set up few variables specify into .env.example
-- First need to copy .env.exampke into .env file `cp .env.example .env`
-- Run `cat service_secret.json|base64` and copy value and set value of GOOGLE_SECRET_BASE64_ENCODED with output value
-
-Now you can run `docker run  -p 2500:2500  -t --env-file=.env  GoBridge`
+From the root of this directory, run `docker compose up -d`
 
 ### References:
 https://developers.google.com/gmail/api/reference/rest/v1/users.messages/insert
