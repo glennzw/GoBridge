@@ -43,13 +43,10 @@ import base64
 import configparser
 from pathlib import Path
 
-config = configparser.ConfigParser()
-config.read('config.ini')
-
-CLIENT_SECRET_FILE = config.get('GOBRIDGE', 'ClientSecretFile')
-SMTP_PORT = config.getint('GOBRIDGE', 'SMTPPort')
-SMTP_INTERFACE = os.getenv('SMTP_INTERFACE', config.get('GOBRIDGE', 'SMTPInterface'))
-LABELS = os.getenv('SMTP_LABELS', config.get('GOBRIDGE', 'Labels')).split(',')
+SMTP_PORT = int(os.getenv('SMTP_PORT'))
+SMTP_INTERFACE = os.getenv('SMTP_INTERFACE')
+LABELS = os.getenv('LABELS').split(',')
+GOOGLE_SECRET = open(os.getenv('GOOGLE_SECRET'))
 
 scopes = ["https://www.googleapis.com/auth/gmail.insert"]
 
@@ -103,20 +100,14 @@ class SMTPServer(smtpd.SMTPServer):
                 return '554 Unahndled error'
 
 def create_secret_keyfile():
-    return json.loads(base64.b64decode(os.environ["GOOGLE_SECRET_BASE64_ENCODED"]))
+    return json.load(GOOGLE_SECRET)
 
 
 def get_credential():
-    if os.path.exists(CLIENT_SECRET_FILE):
-        print("[+] Running GoBridge with google secret from file")
-        return ServiceAccountCredentials.from_json_keyfile_name(
-            CLIENT_SECRET_FILE, scopes
-        )
-    else:
-        print("[+] Running GoBridge with google secret from env variable")
-        return ServiceAccountCredentials.from_json_keyfile_dict(
-            create_secret_keyfile(), scopes
-        )
+    print("[+] Running GoBridge with google secret from env variable")
+    return ServiceAccountCredentials.from_json_keyfile_dict(
+        create_secret_keyfile(), scopes
+    )
 
 
 if __name__ == "__main__":
@@ -127,3 +118,4 @@ if __name__ == "__main__":
         asyncore.loop()
     except KeyboardInterrupt:
         smtp_server.close()
+
