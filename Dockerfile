@@ -10,4 +10,4 @@ ADD GoBridge.py .
 ADD config.ini .
 
 EXPOSE 2500
-CMD [ "python", "./GoBridge.py" ]
+CMD [ "python","-u", "./GoBridge.py" ]
