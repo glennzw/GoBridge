@@ -52,7 +52,9 @@ As can be seen in the above output, email addresses not in the scope of the serv
 ## Modifications
 
 Download this whole repository and amend the .env file to align with your own environment. You should not need to amend much else, however may wish to look at the following line and amend with any other domains you will use for portals:
-`      - "traefik.http.routers.gophish-router.rule=Host(`gophish.$DOMAIN`) || Host(`host2.com`)`
+```
+- "traefik.http.routers.gophish-router.rule=Host(`gophish.$DOMAIN`) || Host(`host2.com`)
+```
 
 ## Docker running
 
